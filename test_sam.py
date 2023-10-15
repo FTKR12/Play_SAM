@@ -6,63 +6,21 @@ from PIL import Image
 from segment_anything import sam_model_registry, SamPredictor, SamAutomaticMaskGenerator
 
 from utils.options import get_args
-from utils.show import show_img, show_img_with_point, show_img_with_point_mask, show_img_with_mask, show_img_with_box, show_img_with_box_mask
+from runner import SAMRunner
+from utils.show import show_img, show_img_with_prompt, show_img_with_prompt_and_mask, show_img_with_mask
 
-def test_auto(args, img):
+def main(args, img):
     
-    sam = sam_model_registry[args.model_type](checkpoint=args.checkpoint)
-    sam.to(args.device)
-
-    predictor = SamAutomaticMaskGenerator(
-        model=sam,
-        points_per_side=15,
-        pred_iou_thresh=0.86,
-        stability_score_thresh=0.92,
-        crop_n_layers=1,
-        crop_n_points_downscale_factor=2,
-        box_nms_thresh=1.0,
-        min_mask_region_area=100,  # Requires open-cv to run post-processing
-    )
-    masks = predictor.generate(img)
-    
-    show_img(img, args.output_dir)
-    show_img_with_mask(img, masks, args.output_dir)
-    
-
-def test_with_point(args, img):
-    
-    sam = sam_model_registry[args.model_type](checkpoint=args.checkpoint)
-    sam.to(args.device)
-    predictor = SamPredictor(sam)
-    predictor.set_image(img)
-    point = np.array(args.point)
-    point_label = np.array(args.point_label)
-    masks, scores, logits = predictor.predict(
-        point_coords=point,
-        point_labels=point_label,
-        box=np.array([0,0,150,150]),
-        multimask_output=True,
-    )
-    
-    show_img(img, args.output_dir)
-    show_img_with_point(img, point, point_label, args.output_dir)
-    show_img_with_point_mask(img, point, point_label, masks, scores, args.output_dir)
-
-def test_with_box(args, img):
-    
-    sam = sam_model_registry[args.model_type](checkpoint=args.checkpoint)
-    sam.to(args.device)
-    predictor = SamPredictor(sam)
-    predictor.set_image(img)
-    box = np.array(args.box)
-    masks, scores, logits = predictor.predict(
-        box=box,
-        multimask_output=True,
-    )
-    
-    show_img(img, args.output_dir)
-    show_img_with_box(img, box, args.output_dir)
-    show_img_with_box_mask(img, box, masks, scores, args.output_dir)
+    sam_runner = SAMRunner(args)
+    if args.mode == 'auto':
+        show_img(img, args.output_dir)
+        masks = sam_runner.predict_auto(img)
+        show_img_with_mask(img, masks, args.output_dir)
+    else:
+        show_img(img, args.output_dir)
+        show_img_with_prompt(img, args.output_dir, args.point, args.point_label, args.box)
+        masks = sam_runner.predict_with_prompt(img)
+        show_img_with_prompt_and_mask(img, masks, args.output_dir, args.point, args.point_label, args.box)
 
 if __name__ == "__main__":
 
@@ -77,9 +35,8 @@ if __name__ == "__main__":
         img = cv2.imread(args.image_path)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     
-    if args.mode == 'point':
-        test_with_point(args, img)
-    elif args.mode == 'auto':
-        test_auto(args, img)
-    elif args.mode == 'box':
-        test_with_box(args, img)
+    args.point = None if args.point==None else np.array(args.point)
+    args.point_label = None if args.point_label==None else np.array(args.point_label)
+    args.box = None if args.box==None else np.array(args.box)
+    
+    main(args, img)

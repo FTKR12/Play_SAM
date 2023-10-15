@@ -1,8 +1,7 @@
 python test_sam.py \
     --device cuda \
-    --mode point \
+    --mode prompt \
     --model_type vit_h \
     --checkpoint download_model/sam_vit_h_4b8939.pth \
-    --data_type sperm \
-    --sperm_path datasets/771_1stframe_img.pkl \
-    --sperm_id 026
+    --data_type test_image \
+    --sperm_path image/groceries.jpg \

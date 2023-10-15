@@ -5,48 +5,33 @@ def show_img(img, save_dir):
     plt.figure(figsize=(10,10))
     plt.imshow(img)
     plt.axis('off')
-    plt.savefig(f'{save_dir}/input.png')
-
-def show_img_with_point(img, point, label, save_dir):
+    plt.savefig(f'{save_dir}/img.png')
+    
+def show_img_with_prompt(img, save_dir, point=None, point_label=None, box=None, mask=None):
     plt.figure(figsize=(10,10))
     plt.imshow(img)
-    show_points(point, label, plt.gca())
+    if type(point) == np.ndarray: show_points(point, point_label, plt.gca())
+    if type(box)   == np.ndarray: show_box(box, plt.gca())
     plt.axis('off')
-    plt.savefig(f'{save_dir}/input_with_point.png')
+    plt.savefig(f'{save_dir}/img_with_prompt.png')
 
-def show_img_with_point_mask(img, point, point_label, masks, scores, save_dir):
-    for i, (mask, score) in enumerate(zip(masks, scores)):
+def show_img_with_prompt_and_mask(img, masks, save_dir, point=None, point_label=None, box=None):
+    for i, mask in enumerate(masks):
         plt.figure(figsize=(10,10))
         plt.imshow(img)
         show_mask(mask, plt.gca())
-        show_points(point, point_label, plt.gca())
-        plt.title(f"Mask {i+1}, Score: {score:.3f}", fontsize=18)
+        if type(point) == np.ndarray: show_points(point, point_label, plt.gca())
+        if type(box)   == np.ndarray: show_box(box, plt.gca())
+        plt.title(f"Mask {i+1}", fontsize=18)
         plt.axis('off')
-        plt.savefig(f'{save_dir}/input_with_point_mask_{i}.png')
+        plt.savefig(f'{save_dir}/img_with_prompt_and_mask_{i}.png')
 
-def show_img_with_mask(img, masks, save_dir):
-    plt.figure(figsize=(20,20))
+def show_img_with_mask(img, mask, save_dir):
+    plt.figure(figsize=(10,10))
     plt.imshow(img)
-    show_anns(masks)
+    show_anns(mask)
     plt.axis('off')
-    plt.savefig(f'{save_dir}/input_with_mask.png')
-
-def show_img_with_box(img, box, save_dir):
-    plt.figure(figsize=(20,20))
-    plt.imshow(img)
-    show_box(box, plt.gca())
-    plt.axis('off')
-    plt.savefig(f'{save_dir}/input_with_box.png')
-
-def show_img_with_box_mask(img, box, masks, scores, save_dir):
-    for i, (mask, score) in enumerate(zip(masks, scores)):
-        plt.figure(figsize=(10,10))
-        plt.imshow(img)
-        show_mask(mask, plt.gca())
-        show_box(box, plt.gca())
-        plt.title(f"Mask {i+1}, Score: {score:.3f}", fontsize=18)
-        plt.axis('off')
-        plt.savefig(f'{save_dir}/input_with_box_mask_{i}.png')
+    plt.savefig(f'{save_dir}/img_with_mask.png')
 
 def show_mask(mask, ax, random_color=False):
     if random_color:
