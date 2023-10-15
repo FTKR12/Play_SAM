@@ -42,7 +42,7 @@ masks, scores, logits = predictor.predict(
 まず、`.set_image()`で入力画像を渡し、`.predict()`でセグメンテーションできる。
 
 - `point_coords` 点プロンプトの座標
-- `point_label` は点プロンプトのラベル
+- `point_label` 点プロンプトのラベル
 - `box` ボックスプロンプトの座標
 - `multimask_output` Trueの場合、確信度の高い3つを出力
 - `return_logits` Trueの場合、logitを出力
@@ -53,25 +53,22 @@ from segment_anything import SamAutomaticMaskGenerator
 predictor = SamAutomaticMaskGenerator(
     model=sam,
     points_per_side=32,
-    points_per_batch=64,
     pred_iou_thresh=0.88,
     stability_score_thresh=0.95,
-    stability_score_offset=1.0,
     box_nms_thresh=0.7,
-    crop_n_layers=0,
-    crop_nms_thresh=0.7,
-    crop_overlap_ratio=512/1500,
-    crop_n_points_downscale_factor=1,
     min_mask_region_area=0,
-    output_mode='binary_mask',
+
 )
 masks = predictor.generate(img)
 ```
 プロンプトを指定しない(自動の)場合は、`SamAutomaticMaskGenerator()`を使用。
 `.generate()`に入力画像を渡すのみ。
 
-`points_per_side`　
-
+- `points_per_side` 画像の1辺のポイント数。合計n×nのポイントが指定される。
+- `pred_iou_thresh` モデルの予測マスク品質の閾値
+- `stability_score_thresh` モデルの出力したlogitを2値化するための閾値
+- `box_nms_thresh` 重複マスクをフィルタリングするためのIoUカットオフ
+- `min_mask_region_area` 指定した数値より小さい面積を持つマスクの連結領域と穴を除去
 
 ## 3. テスト
 サンプルスクリプト
@@ -84,14 +81,7 @@ python test_sam.py \
     --data_type test_image \
     --sperm_path image/groceries.jpg 
 ```
-シェルスクリプト
-```shell
-bash test_image.sh
-```
-or
-```shell
-bash test_sperm.sh
-```
+その他のスクリプトは[scripts](scripts/)参照。
 
 ## 結果
 ![output](fig/output.png)
