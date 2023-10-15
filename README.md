@@ -15,7 +15,18 @@ cd segment-anything
 pip install -e .
 ```
 
-## 3. コードの簡単な説明
+## 3. 学習済みモデルのダウンロード
+```shell
+mkdir download_model && cd download_model
+# vit_h
+wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+# vit_l
+wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth
+# vit_b
+wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
+```
+
+## 4. コードの簡単な説明
 ### モデルロード
 ```python
 from segment_anything import sam_model_registry
@@ -70,7 +81,7 @@ masks = predictor.generate(img)
 - `box_nms_thresh` 重複マスクをフィルタリングするためのIoUカットオフ
 - `min_mask_region_area` 指定した数値より小さい面積を持つマスクの連結領域と穴を除去
 
-## 3. テスト
+## 5. テスト
 サンプルスクリプト
 ```shell
 python test_sam.py \
