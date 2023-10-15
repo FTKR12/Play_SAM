@@ -1,2 +1,2 @@
 download_model
-datasets
+datasets/*pkl
