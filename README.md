@@ -34,3 +34,8 @@ or
 ```shell
 bash test_sperm.sh
 ```
+
+## 結果
+![sperm1](fig/sperm1_output.png)
+![sperm2](fig/sperm2_output.png)
+![sperm3](fig/sperm3_with_point.png.png)

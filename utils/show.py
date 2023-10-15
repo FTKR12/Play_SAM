@@ -31,6 +31,23 @@ def show_img_with_mask(img, masks, save_dir):
     plt.axis('off')
     plt.savefig(f'{save_dir}/input_with_mask.png')
 
+def show_img_with_box(img, box, save_dir):
+    plt.figure(figsize=(20,20))
+    plt.imshow(img)
+    show_box(box, plt.gca())
+    plt.axis('off')
+    plt.savefig(f'{save_dir}/input_with_box.png')
+
+def show_img_with_box_mask(img, box, masks, scores, save_dir):
+    for i, (mask, score) in enumerate(zip(masks, scores)):
+        plt.figure(figsize=(10,10))
+        plt.imshow(img)
+        show_mask(mask, plt.gca())
+        show_box(box, plt.gca())
+        plt.title(f"Mask {i+1}, Score: {score:.3f}", fontsize=18)
+        plt.axis('off')
+        plt.savefig(f'{save_dir}/input_with_box_mask_{i}.png')
+
 def show_mask(mask, ax, random_color=False):
     if random_color:
         color = np.concatenate([np.random.random(3), np.array([0.6])], axis=0)

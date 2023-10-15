@@ -6,7 +6,7 @@ from PIL import Image
 from segment_anything import sam_model_registry, SamPredictor, SamAutomaticMaskGenerator
 
 from utils.options import get_args
-from utils.show import show_img, show_img_with_point, show_img_with_point_mask, show_img_with_mask
+from utils.show import show_img, show_img_with_point, show_img_with_point_mask, show_img_with_mask, show_img_with_box, show_img_with_box_mask
 
 def test_auto(args, img):
     
@@ -40,12 +40,29 @@ def test_with_point(args, img):
     masks, scores, logits = predictor.predict(
         point_coords=point,
         point_labels=point_label,
+        box=np.array([0,0,150,150]),
         multimask_output=True,
     )
     
     show_img(img, args.output_dir)
     show_img_with_point(img, point, point_label, args.output_dir)
     show_img_with_point_mask(img, point, point_label, masks, scores, args.output_dir)
+
+def test_with_box(args, img):
+    
+    sam = sam_model_registry[args.model_type](checkpoint=args.checkpoint)
+    sam.to(args.device)
+    predictor = SamPredictor(sam)
+    predictor.set_image(img)
+    box = np.array(args.box)
+    masks, scores, logits = predictor.predict(
+        box=box,
+        multimask_output=True,
+    )
+    
+    show_img(img, args.output_dir)
+    show_img_with_box(img, box, args.output_dir)
+    show_img_with_box_mask(img, box, masks, scores, args.output_dir)
 
 if __name__ == "__main__":
 
@@ -64,3 +81,5 @@ if __name__ == "__main__":
         test_with_point(args, img)
     elif args.mode == 'auto':
         test_auto(args, img)
+    elif args.mode == 'box':
+        test_with_box(args, img)
