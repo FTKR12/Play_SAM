@@ -28,7 +28,7 @@ def get_args():
     parser.add_argument('--output_mode', default='binary_mask', type=str)
     ########## dataset options ##########
     parser.add_argument('--data_type', default='sperm', help='[test_image, sperm]')
-    parser.add_argument('--image_path', default='image/groceries.jpg')
+    parser.add_argument('--image_path', default='datasets/groceries.jpg')
     parser.add_argument('--sperm_path', default='datasets/771_1stframe_img.pkl')
     parser.add_argument('--sperm_id', default='027')
 
