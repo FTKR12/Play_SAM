@@ -25,6 +25,7 @@ python test_sam.py \
     --data_type test_image \
     --sperm_path image/groceries.jpg 
 ```
+シェルスクリプト
 ```shell
 bash test_image.sh
 ```
