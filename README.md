@@ -41,11 +41,11 @@ masks, scores, logits = predictor.predict(
 プロンプトを指定する場合は、`SamPredictor()`を使用。
 まず、`.set_image()`で入力画像を渡し、`.predict()`でセグメンテーションできる。
 
-`point_coords` 点プロンプトの座標
-`point_label` は点プロンプトのラベル
-`box` ボックスプロンプトの座標
-`multimask_output` Trueの場合、確信度の高い3つを出力
-`return_logits` Trueの場合、logitを出力
+- `point_coords` 点プロンプトの座標
+- `point_label` は点プロンプトのラベル
+- `box` ボックスプロンプトの座標
+- `multimask_output` Trueの場合、確信度の高い3つを出力
+- `return_logits` Trueの場合、logitを出力
 
 ### 自動(プロンプト指定しない)の場合
 ```python
